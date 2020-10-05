@@ -1,0 +1,85 @@
+{% extends 'home-page.html.twig' %}
+
+{% block contenuto %}
+	<article>
+		<header>
+			<h2>{{ articolo.titolo }}</h2>
+			<p>Scritto il {{ articolo.creato|date('Y-m-d') }}</p>
+		</header>
+		{{ articolo.contenuto|raw }}
+	</article>
+
+	<article>
+		<div id="rating">
+			{% for valore in range(1, 5) %}
+				<input type="radio" class="rating" value="{{ valore }}" {{ voto == valore ? 'checked' }} />
+			{% endfor %}
+		</div>
+
+		<hr />
+		<h3>Commenti</h3>
+
+		<dl>
+			{% for commento in commenti %}
+				<dt class="commento-{{ commento.id }}">{{ commento.creato|date('Y-m-d H:i:s') }}</dt>
+				<dd class="commento-{{ commento.id }}">
+					{{ commento.commento|raw }}
+					{% if admin %}
+						<br />
+						<button type="button" id="delete-comment" data-id-commento="{{ commento.id }}">Elimina commento</button>
+					{% endif %}
+					{% if not admin %}
+						<br />
+						<button type="button" id="report-comment" data-id-commento="{{ commento.id }}">Riporta commento</button>
+					{% endif %}
+				</dd>
+			{% endfor %}
+		</dl>
+
+		<form method="post">
+			<textarea name="commento" placeholder="Commenta l'articolo"></textarea>
+			<button type="submit">Invia</button>
+		</form>
+	</article>
+
+	<script type="text/javascript">
+	    $(function(){
+		    $('#rating').rating(function (vote, event) {
+		        $.ajax({
+		            url: "/api.php",
+		            type: "GET",
+		            data: {
+		            	voto: vote,
+		            	type: "vote_comment",
+		            	path: "{{ global.request.server.get('REQUEST_URI') }}",
+		            },
+		        });
+		    });
+
+		    $('#delete-comment').click(function () {
+		    	$('.commento-' + $(this).attr('data-id-commento')).hide();
+		        $.ajax({
+		            url: "/api.php",
+		            type: "GET",
+		            data: {
+		            	type: "delete_comment",
+		            	id: $(this).attr('data-id-commento'),
+		            },
+		        });
+		    });
+
+		    $('#report-comment').click(function () {
+		        $.ajax({
+		            url: "/api.php",
+		            type: "GET",
+		            data: {
+		            	type: "report_comment",
+		            	id: $(this).attr('data-id-commento'),
+		            },
+		        });
+
+		        alert('Commento riportato');
+		    });
+	    });
+	</script>
+{% endblock contenuto %}

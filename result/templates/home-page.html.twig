@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Blog del Corso</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm.min.css" />
+
+		<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="/css/rating.css">
+		<script type="text/javascript" src="/js/rating.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>
+				<a href="/">Blog del Corso</a>
+			</h1>
+			<nav>
+				<ul>
+					{% for articolo in articoli|default([]) %}
+						<li>
+							<a href="/post/{{ articolo.id }}">{{ articolo.titolo }}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</nav>
+			{% if admin|default(false) %}
+				<p>Benvenuto admin, <a href="/logout">esci</a></p>
+			{% endif %}
+		</header>
+
+		<section>
+			{% block contenuto %}
+				{% for articolo in articoli %}
+					<article>
+						<header>
+							<h2>{{ articolo.titolo }}</h2>
+							<p>Scritto il {{ articolo.creato|date('Y-m-d') }}</p>
+						</header>
+						{{ articolo.contenuto|raw }}
+					</article>
+				{% endfor %}
+			{% endblock contenuto %}
+		</section>
+
+		<footer>
+			<p>Blog by Emanuele</p>
+		</footer>
+	</body>
+</html>

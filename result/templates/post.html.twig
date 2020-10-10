@@ -4,7 +4,9 @@
 	<article>
 		<header>
 			<h2>{{ articolo.titolo }}</h2>
-			<p>Scritto il {{ articolo.creato|date('Y-m-d') }}</p>
+			<small>
+				<em>Scritto il {{ articolo.creato|date('Y-m-d') }}</em>
+			</small>
 		</header>
 		{{ articolo.contenuto|raw }}
 	</article>
@@ -16,23 +18,26 @@
 			{% endfor %}
 		</div>
 
-		<hr />
 		<h3>Commenti</h3>
 
 		<dl>
 			{% for commento in commenti %}
-				<dt class="commento-{{ commento.id }}">{{ commento.creato|date('Y-m-d H:i:s') }}</dt>
-				<dd class="commento-{{ commento.id }}">
-					{{ commento.commento|raw }}
+				<div class="right-floating">
 					{% if admin %}
 						<br />
-						<button type="button" id="delete-comment" data-id-commento="{{ commento.id }}">Elimina commento</button>
+						<button type="button" id="delete-comment" data-id-commento="{{ commento.id }}">Elimina</button>
 					{% endif %}
 					{% if not admin %}
 						<br />
-						<button type="button" id="report-comment" data-id-commento="{{ commento.id }}">Riporta commento</button>
+						<button type="button" id="report-comment" data-id-commento="{{ commento.id }}">Riporta</button>
 					{% endif %}
-				</dd>
+				</div>
+				<blockquote class="commento-{{ commento.id }}">
+					{{ commento.commento }}
+					<footer>
+						<em>Scritto il {{ commento.creato|date('Y-m-d H:i:s') }}</em>
+					</footer>
+				</blockquote>
 			{% endfor %}
 		</dl>
 

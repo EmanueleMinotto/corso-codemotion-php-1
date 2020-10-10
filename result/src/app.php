@@ -27,7 +27,6 @@ $app->get('/', function () use ($app) {
 
 $app
 	->match('/post/{id}', function ($id) use ($app) {
-		$articoli = $app['db']->fetchAllAssociative('select * from articoli');
 		$articolo = $app['db']->fetchAssociative('select * from articoli where id = ?', array(
 			$id,
 		));
@@ -56,7 +55,6 @@ $app
 		$voto = (int) round(array_sum($voti) / max(count($voti), 1), 0);
 
 	    return $app['twig']->render('post.html.twig', array(
-        	'articoli' => $articoli,
 	        'articolo' => $articolo,
 	        'voto' => $voto,
 	        'commenti' => $commenti,
@@ -78,7 +76,7 @@ $app->post('/api.php', function ($id) use ($app) {
 });
 
 $app
-	->match('/admin-login.php', function () use ($app) {
+	->match('/admin-login', function () use ($app) {
 		$password = 'g7e3G6?vnKX>myRY';
 
 		if (!empty($_POST['password']) && $_POST['password'] === $password) {
@@ -91,7 +89,7 @@ $app
 	})
 	->method('GET|POST');
 
-$app->get('/logout.php', function () use ($app) {
+$app->get('/logout', function () use ($app) {
 	$app['session']->remove('admin');
 
     return $app->redirect('/');

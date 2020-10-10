@@ -4,7 +4,12 @@
 		<title>Blog del Corso</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="https://unpkg.com/awsm.css/dist/awsm.min.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+		<style type="text/css">
+			.right-floating {
+				float: right;
+			}
+		</style>
 
 		<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 		<link rel="stylesheet" type="text/css" href="/css/rating.css">
@@ -15,15 +20,6 @@
 			<h1>
 				<a href="/">Blog del Corso</a>
 			</h1>
-			<nav>
-				<ul>
-					{% for articolo in articoli|default([]) %}
-						<li>
-							<a href="/post/{{ articolo.id }}">{{ articolo.titolo }}</a>
-						</li>
-					{% endfor %}
-				</ul>
-			</nav>
 			{% if admin|default(false) %}
 				<p>Benvenuto admin, <a href="/logout">esci</a></p>
 			{% endif %}
@@ -34,8 +30,12 @@
 				{% for articolo in articoli %}
 					<article>
 						<header>
-							<h2>{{ articolo.titolo }}</h2>
-							<p>Scritto il {{ articolo.creato|date('Y-m-d') }}</p>
+							<h2>
+								<a href="/post/{{ articolo.id }}">{{ articolo.titolo }}</a>
+							</h2>
+							<small>
+								<em>Scritto il {{ articolo.creato|date('Y-m-d') }}</em>
+							</small>
 						</header>
 						{{ articolo.contenuto|raw }}
 					</article>
